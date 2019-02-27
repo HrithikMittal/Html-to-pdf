@@ -3,6 +3,8 @@ import datetime
 from slugify import slugify
 import os
 import pdfkit
+import tinycss
+import cssutils
 from pyquery import PyQuery
 
 now = datetime.datetime.now()
@@ -13,11 +15,19 @@ df = pd.DataFrame([
         # {'package': 'N2N Python', 'student': 'Gaurav Singh', 'level': 'Level 2'},
         # {'package': 'PEPTize', 'student': 'Rakesh Sharma', 'level': 'Level 3'},
     ])
-print(df)
 
+css = "Null"
 
 for root,dirs,files in os.walk("."):
         for filespath in files:
+            if os.path.splitext(filespath)[1]==".css":
+                css_file_path = os.path.join(root,filespath)
+                print(css_file_path)
+                
+                #read from css file
+                css_file = open(css_file_path)
+                css = css_file.read()
+
             #process all html files
             if os.path.splitext(filespath)[1]==".html":
                 html_file_path = os.path.join(root,filespath)
@@ -42,8 +52,10 @@ for root,dirs,files in os.walk("."):
                 html = html.replace("{{package}}",student_package)
                 html = html.replace("{{certdate}}",student_certdate)
 
+
                 html_file = open(html_file_path,"w")
                 html_file.write(html)
+
                 html_file.close()
                 #make sure the file name is valid
 
@@ -69,5 +81,9 @@ for root,dirs,files in os.walk("."):
                 html_file = open(html_file_path,"w")
                 html_file.write(html)
                 html_file.close()
+
+
+print(css)
+# pdfkit.from_file('./templates/index.html','file.pdf',css=css)
 
 input("test:")
